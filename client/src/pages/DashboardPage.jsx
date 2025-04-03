@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { getUnits, deleteUnit, createUnit } from '../utils/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUnits, sortUnits, setFilter, clearFilters, removeUnit } from '../store/slices/unitSlice';
+import { addUnit } from '../store/slices/unitSlice';
 import UnitForm from '../components/UnitForm';
 
 const DashboardContainer = styled.div``;
@@ -61,6 +63,88 @@ const TableRow = styled.tr`
 const TableHeader = styled.th`
   padding: 1rem;
   text-align: left;
+  cursor: pointer;
+  position: relative;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  &::after {
+    content: '${props => props.sorted ? (props.sortDirection === 'asc' ? ' ↑' : ' ↓') : ''}';
+    position: absolute;
+    margin-left: 0.5rem;
+  }
+`;
+
+const FilterContainer = styled.div`
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+`;
+
+const FilterGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FilterLabel = styled.label`
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  color: #555;
+`;
+
+const FilterInput = styled.input`
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  
+  &:focus {
+    outline: none;
+    border-color: #4b0082;
+  }
+`;
+
+const FilterSelect = styled.select`
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  
+  &:focus {
+    outline: none;
+    border-color: #4b0082;
+  }
+`;
+
+const ClearFiltersButton = styled.button`
+  background-color: transparent;
+  color: #4b0082;
+  border: 1px solid #4b0082;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  height: fit-content;
+  align-self: flex-end;
+  
+  &:hover {
+    background-color: rgba(75, 0, 130, 0.1);
+  }
+`;
+
+const DisplayCount = styled.div`
+  background-color: #f5f0ff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #4b0082;
 `;
 
 const TableCell = styled.td`
@@ -249,63 +333,84 @@ const getStatusLabel = (status) => {
     case 'Accepted Request': return 'Прийнята заявка';
     case 'Users Created': return 'Створені користувачі';
     case 'Jira Request Made': return 'Зроблена заявка в Jira';
-    case 'Domain Added': return 'Заведено в домен';
     case 'Quarantine - 1': return 'Карантин - 1';
     case 'Quarantine - 2': return 'Карантин - 2';
     case 'Quarantine - 3': return 'Карантин - 3';
+    case 'Domain Added': return 'Заведено в домен';
     case 'Completed': return 'Виконано';
     default: return status;
   }
 };
 
 const DashboardPage = () => {
-  const [units, setUnits] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const { 
+    filteredItems: units, 
+    loading, 
+    error, 
+    sortField, 
+    sortDirection,
+    displayCount
+  } = useSelector(state => state.units);
+  
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [unitToDelete, setUnitToDelete] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [filters, setFilters] = useState({
+    name_of_unit: '',
+    brigade_or_higher: '',
+    mil_unit: '',
+    email: '',
+    status: '',
+    sended_to_legend: ''
+  });
   
   useEffect(() => {
-    fetchUnits();
+    dispatch(fetchUnits());
     
     // Set up auto refresh every minute
     const intervalId = setInterval(() => {
-      fetchUnits();
+      dispatch(fetchUnits());
       setLastUpdated(new Date());
     }, 60000);
     
     return () => clearInterval(intervalId);
-  }, []);
+  }, [dispatch]);
   
-  const fetchUnits = async () => {
-    setLoading(true);
-    try {
-      const data = await getUnits();
-      setUnits(data || []);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching units:', err);
-      setError('Помилка завантаження даних. Спробуйте оновити сторінку.');
-    } finally {
-      setLoading(false);
-    }
+  const handleSort = (field) => {
+    dispatch(sortUnits(field));
+  };
+  
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({ ...prev, [name]: value }));
+    dispatch(setFilter({ field: name, value }));
+  };
+  
+  const handleClearFilters = () => {
+    setFilters({
+      name_of_unit: '',
+      brigade_or_higher: '',
+      mil_unit: '',
+      email: '',
+      status: '',
+      sended_to_legend: ''
+    });
+    dispatch(clearFilters());
   };
   
   const handleRefresh = () => {
-    fetchUnits();
+    dispatch(fetchUnits());
     setLastUpdated(new Date());
   };
   
   const handleAddUnit = async (unitData) => {
     try {
-      await createUnit(unitData);
-      fetchUnits();
+      dispatch(addUnit(unitData));
       setShowAddModal(false);
     } catch (err) {
       console.error('Error creating unit:', err);
-      setError('Помилка при створенні підрозділу. Спробуйте ще раз.');
     }
   };
   
@@ -318,13 +423,11 @@ const DashboardPage = () => {
     if (!unitToDelete) return;
     
     try {
-      await deleteUnit(unitToDelete.id);
-      fetchUnits();
+      dispatch(removeUnit(unitToDelete.id));
       setShowDeleteModal(false);
       setUnitToDelete(null);
     } catch (err) {
       console.error('Error deleting unit:', err);
-      setError('Помилка при видаленні підрозділу. Спробуйте ще раз.');
     }
   };
   
@@ -345,17 +448,133 @@ const DashboardPage = () => {
       
       {error && <ErrorMessage>{error}</ErrorMessage>}
       
+      <FilterContainer>
+        <FilterGroup>
+          <FilterLabel>Назва підрозділу</FilterLabel>
+          <FilterInput 
+            type="text" 
+            name="name_of_unit"
+            value={filters.name_of_unit}
+            onChange={handleFilterChange}
+            placeholder="Фільтр..."
+          />
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Військова частина</FilterLabel>
+          <FilterInput 
+            type="text" 
+            name="mil_unit"
+            value={filters.mil_unit}
+            onChange={handleFilterChange}
+            placeholder="Фільтр..."
+          />
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Бригада</FilterLabel>
+          <FilterInput 
+            type="text" 
+            name="brigade_or_higher"
+            value={filters.brigade_or_higher}
+            onChange={handleFilterChange}
+            placeholder="Фільтр..."
+          />
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Email</FilterLabel>
+          <FilterInput 
+            type="text" 
+            name="email"
+            value={filters.email}
+            onChange={handleFilterChange}
+            placeholder="Фільтр..."
+          />
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Статус</FilterLabel>
+          <FilterSelect 
+            name="status"
+            value={filters.status}
+            onChange={handleFilterChange}
+          >
+            <option value="">Всі статуси</option>
+            <option value="Accepted Request">Прийнята заявка</option>
+            <option value="Users Created">Створені користувачі</option>
+            <option value="Jira Request Made">Зроблена заявка в Jira</option>
+            <option value="Quarantine - 1">Карантин - 1</option>
+            <option value="Quarantine - 2">Карантин - 2</option>
+            <option value="Quarantine - 3">Карантин - 3</option>
+            <option value="Domain Added">Заведено в домен</option>
+            <option value="Completed">Виконано</option>
+          </FilterSelect>
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Відправлено в легенду</FilterLabel>
+          <FilterSelect 
+            name="sended_to_legend"
+            value={filters.sended_to_legend}
+            onChange={handleFilterChange}
+          >
+            <option value="">Всі</option>
+            <option value="1">Так</option>
+            <option value="0">Ні</option>
+          </FilterSelect>
+        </FilterGroup>
+        
+        <ClearFiltersButton onClick={handleClearFilters}>
+          Очистити фільтри
+        </ClearFiltersButton>
+      </FilterContainer>
+      
+      <DisplayCount>
+        Відображено записів: {displayCount}
+      </DisplayCount>
+      
       {loading ? (
         <LoadingSpinner />
       ) : units.length > 0 ? (
         <Table>
           <TableHead>
             <tr>
-              <TableHeader>ID</TableHeader>
-              <TableHeader>Назва підрозділу</TableHeader>
-              <TableHeader>Військова частина</TableHeader>
-              <TableHeader>Бригада</TableHeader>
-              <TableHeader>Статус</TableHeader>
+              <TableHeader 
+                onClick={() => handleSort('id')}
+                sorted={sortField === 'id'}
+                sortDirection={sortDirection}
+              >ID</TableHeader>
+              <TableHeader 
+                onClick={() => handleSort('name_of_unit')}
+                sorted={sortField === 'name_of_unit'}
+                sortDirection={sortDirection}
+              >Назва підрозділу</TableHeader>
+              <TableHeader 
+                onClick={() => handleSort('mil_unit')}
+                sorted={sortField === 'mil_unit'}
+                sortDirection={sortDirection}
+              >Військова частина</TableHeader>
+              <TableHeader 
+                onClick={() => handleSort('brigade_or_higher')}
+                sorted={sortField === 'brigade_or_higher'}
+                sortDirection={sortDirection}
+              >Бригада</TableHeader>
+              <TableHeader 
+                onClick={() => handleSort('email')}
+                sorted={sortField === 'email'}
+                sortDirection={sortDirection}
+              >Email</TableHeader>
+              <TableHeader 
+                onClick={() => handleSort('status')}
+                sorted={sortField === 'status'}
+                sortDirection={sortDirection}
+              >Статус</TableHeader>
+              <TableHeader 
+                onClick={() => handleSort('sended_to_legend')}
+                sorted={sortField === 'sended_to_legend'}
+                sortDirection={sortDirection}
+              >В легенді</TableHeader>
               <TableHeader>Дії</TableHeader>
             </tr>
           </TableHead>
@@ -366,10 +585,14 @@ const DashboardPage = () => {
                 <TableCell>{unit.name_of_unit || '—'}</TableCell>
                 <TableCell>{unit.mil_unit}</TableCell>
                 <TableCell>{unit.brigade_or_higher || '—'}</TableCell>
+                <TableCell>{unit.email || '—'}</TableCell>
                 <TableCell>
                   <StatusBadge status={unit.status}>
                     {getStatusLabel(unit.status)}
                   </StatusBadge>
+                </TableCell>
+                <TableCell>
+                  {unit.sended_to_legend === 1 ? 'Так' : 'Ні'}
                 </TableCell>
                 <TableCell>
                   <ViewLink to={`/units/${unit.id}`}>

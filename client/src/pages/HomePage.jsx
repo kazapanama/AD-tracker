@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { getStats, searchUnits } from '../utils/api';
+import { useSelector, useDispatch } from 'react-redux';
+import { getStats } from '../utils/api';
+import { clearSearch } from '../store/slices/searchSlice';
 import StatisticsChart from '../components/StatisticsChart';
 import SearchBar from '../components/SearchBar';
 import UnitCard from '../components/UnitCard';
@@ -79,10 +81,20 @@ const RefreshButton = styled.button`
   }
 `;
 
+const ResultsCount = styled.div`
+  background-color: #f5f0ff;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #4b0082;
+`;
+
 const HomePage = () => {
+  const dispatch = useDispatch();
+  const { filteredResults, loading: searchLoading, showResults, error: searchError } = useSelector(state => state.search);
+  
   const [stats, setStats] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
@@ -96,8 +108,12 @@ const HomePage = () => {
       setLastUpdated(new Date());
     }, 60000);
     
-    return () => clearInterval(intervalId);
-  }, []);
+    // Clear search on component unmount
+    return () => {
+      clearInterval(intervalId);
+      dispatch(clearSearch());
+    };
+  }, [dispatch]);
   
   const fetchStats = async () => {
     setLoading(true);
@@ -111,10 +127,10 @@ const HomePage = () => {
         'Accepted Request', 
         'Users Created', 
         'Jira Request Made', 
-        'Domain Added', 
         'Quarantine - 1', 
         'Quarantine - 2', 
         'Quarantine - 3', 
+        'Domain Added', 
         'Completed'
       ];
       
@@ -133,35 +149,18 @@ const HomePage = () => {
     }
   };
   
-  const handleSearch = async (query) => {
-    setIsSearching(true);
-    setLoading(true);
-    try {
-      const data = await searchUnits(query);
-      setSearchResults(data || []);
-      setError(null);
-    } catch (err) {
-      console.error('Error searching units:', err);
-      setError('Помилка пошуку. Спробуйте ще раз.');
-      setSearchResults([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
   const handleRefresh = () => {
     fetchStats();
     setLastUpdated(new Date());
-    // Clear search results when refreshing
-    setSearchResults([]);
-    setIsSearching(false);
+    dispatch(clearSearch());
   };
   
   return (
     <HomeContainer>
       {error && <ErrorMessage>{error}</ErrorMessage>}
+      {searchError && <ErrorMessage>{searchError}</ErrorMessage>}
       
-      {loading && !isSearching ? (
+      {loading && !showResults ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -177,17 +176,20 @@ const HomePage = () => {
         </>
       )}
       
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar />
       
-      {isSearching && (
+      {showResults && (
         <SearchResultsContainer>
           <ResultsTitle>Результати пошуку</ResultsTitle>
+          <ResultsCount>
+            Знайдено результатів: {filteredResults.length}
+          </ResultsCount>
           
-          {loading ? (
+          {searchLoading ? (
             <LoadingSpinner />
-          ) : searchResults.length > 0 ? (
+          ) : filteredResults.length > 0 ? (
             <ResultsGrid>
-              {searchResults.map(unit => (
+              {filteredResults.map(unit => (
                 <UnitCard key={unit.id} unit={unit} />
               ))}
             </ResultsGrid>

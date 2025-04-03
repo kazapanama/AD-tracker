@@ -42,6 +42,28 @@ const Input = styled.input`
   }
 `;
 
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+`;
+
+const Checkbox = styled.input`
+  margin-right: 0.5rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  accent-color: #4b0082;
+`;
+
 const TextArea = styled.textarea`
   width: 100%;
   padding: 0.75rem;
@@ -129,7 +151,8 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
     description: '',
     email: '',
     status: 'Accepted Request',
-    date_when_finished: ''
+    date_when_finished: '',
+    sended_to_legend: 0
   });
   
   const [errors, setErrors] = useState({});
@@ -143,16 +166,17 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
         description: unit.description || '',
         email: unit.email || '',
         status: unit.status || 'Accepted Request',
-        date_when_finished: unit.date_when_finished || ''
+        date_when_finished: unit.date_when_finished || '',
+        sended_to_legend: unit.sended_to_legend || 0
       });
     }
   }, [unit]);
   
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? (checked ? 1 : 0) : value
     }));
     
     // Clear error for the field when it's being edited
@@ -191,10 +215,10 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
     { value: 'Accepted Request', label: 'Прийнята заявка' },
     { value: 'Users Created', label: 'Створені користувачі' },
     { value: 'Jira Request Made', label: 'Зроблена заявка в Jira' },
-    { value: 'Domain Added', label: 'Заведено в домен' },
     { value: 'Quarantine - 1', label: 'Карантин - 1' },
     { value: 'Quarantine - 2', label: 'Карантин - 2' },
     { value: 'Quarantine - 3', label: 'Карантин - 3' },
+    { value: 'Domain Added', label: 'Заведено в домен' },
     { value: 'Completed', label: 'Виконано' }
   ];
   
@@ -284,6 +308,20 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
           value={formData.description}
           onChange={handleChange}
         />
+      </FormGroup>
+      
+      <FormGroup>
+        <CheckboxContainer>
+          <CheckboxLabel>
+            <Checkbox
+              type="checkbox"
+              name="sended_to_legend"
+              checked={formData.sended_to_legend === 1}
+              onChange={handleChange}
+            />
+            Відправлено в легенду
+          </CheckboxLabel>
+        </CheckboxContainer>
       </FormGroup>
       
       <ButtonGroup>

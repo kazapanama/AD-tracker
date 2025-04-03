@@ -244,10 +244,10 @@ const getStatusLabel = (status) => {
     case 'Accepted Request': return 'Прийнята заявка';
     case 'Users Created': return 'Створені користувачі';
     case 'Jira Request Made': return 'Зроблена заявка в Jira';
-    case 'Domain Added': return 'Заведено в домен';
     case 'Quarantine - 1': return 'Карантин - 1';
     case 'Quarantine - 2': return 'Карантин - 2';
     case 'Quarantine - 3': return 'Карантин - 3';
+    case 'Domain Added': return 'Заведено в домен';
     case 'Completed': return 'Виконано';
     default: return status;
   }
@@ -392,6 +392,13 @@ const UnitDetailPage = () => {
               <DetailValue>{unit.date_when_finished}</DetailValue>
             </UnitDetail>
           )}
+          
+          <UnitDetail>
+            <DetailLabel>Відправлено в легенду:</DetailLabel>
+            <DetailValue>
+              {unit.sended_to_legend === 1 ? 'Так' : 'Ні'}
+            </DetailValue>
+          </UnitDetail>
           
           {unit.description && (
             <Description>
