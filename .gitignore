@@ -34,3 +34,5 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
+
+my-web-app-full.tar.gz

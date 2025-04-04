@@ -160,6 +160,8 @@ const HomePage = () => {
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {searchError && <ErrorMessage>{searchError}</ErrorMessage>}
       
+      <SearchBar />
+      
       {loading && !showResults ? (
         <LoadingSpinner />
       ) : (
@@ -175,8 +177,6 @@ const HomePage = () => {
           </div>
         </>
       )}
-      
-      <SearchBar />
       
       {showResults && (
         <SearchResultsContainer>

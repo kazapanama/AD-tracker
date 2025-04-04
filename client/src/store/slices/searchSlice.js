@@ -40,7 +40,8 @@ const searchSlice = createSlice({
           unit.brigade_or_higher?.toLowerCase().includes(searchTerm) ||
           unit.mil_unit?.toLowerCase().includes(searchTerm) ||
           unit.description?.toLowerCase().includes(searchTerm) ||
-          unit.email?.toLowerCase().includes(searchTerm)
+          unit.email?.toLowerCase().includes(searchTerm) ||
+          unit.computer_name?.toLowerCase().includes(searchTerm)
         );
       }
     },

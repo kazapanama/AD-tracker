@@ -195,6 +195,7 @@ const StatusBadge = styled.span`
       case 'Quarantine - 2': return '#ffe0b2';
       case 'Quarantine - 3': return '#ffccbc';
       case 'Completed': return '#b2dfdb';
+      case 'Rejected': return '#ef9a9a';
       default: return '#e0e0e0';
     }
   }};
@@ -208,6 +209,7 @@ const StatusBadge = styled.span`
       case 'Quarantine - 2': return '#ef6c00';
       case 'Quarantine - 3': return '#d84315';
       case 'Completed': return '#00695c';
+      case 'Rejected': return '#c62828';
       default: return '#616161';
     }
   }};
@@ -338,6 +340,7 @@ const getStatusLabel = (status) => {
     case 'Quarantine - 3': return 'Карантин - 3';
     case 'Domain Added': return 'Заведено в домен';
     case 'Completed': return 'Виконано';
+    case 'Rejected': return 'Відхилено';
     default: return status;
   }
 };
@@ -363,7 +366,8 @@ const DashboardPage = () => {
     mil_unit: '',
     email: '',
     status: '',
-    sended_to_legend: ''
+    sended_to_legend: '',
+    computer_name: ''
   });
   
   useEffect(() => {
@@ -395,7 +399,8 @@ const DashboardPage = () => {
       mil_unit: '',
       email: '',
       status: '',
-      sended_to_legend: ''
+      sended_to_legend: '',
+      computer_name: ''
     });
     dispatch(clearFilters());
   };
@@ -509,7 +514,19 @@ const DashboardPage = () => {
             <option value="Quarantine - 3">Карантин - 3</option>
             <option value="Domain Added">Заведено в домен</option>
             <option value="Completed">Виконано</option>
+            <option value="Rejected">Відхилено</option>
           </FilterSelect>
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Ім'я комп'ютера</FilterLabel>
+          <FilterInput 
+            type="text" 
+            name="computer_name"
+            value={filters.computer_name}
+            onChange={handleFilterChange}
+            placeholder="Фільтр..."
+          />
         </FilterGroup>
         
         <FilterGroup>
@@ -541,11 +558,6 @@ const DashboardPage = () => {
           <TableHead>
             <tr>
               <TableHeader 
-                onClick={() => handleSort('id')}
-                sorted={sortField === 'id'}
-                sortDirection={sortDirection}
-              >ID</TableHeader>
-              <TableHeader 
                 onClick={() => handleSort('name_of_unit')}
                 sorted={sortField === 'name_of_unit'}
                 sortDirection={sortDirection}
@@ -571,6 +583,11 @@ const DashboardPage = () => {
                 sortDirection={sortDirection}
               >Статус</TableHeader>
               <TableHeader 
+                onClick={() => handleSort('computer_name')}
+                sorted={sortField === 'computer_name'}
+                sortDirection={sortDirection}
+              >Ім'я комп'ютера</TableHeader>
+              <TableHeader 
                 onClick={() => handleSort('sended_to_legend')}
                 sorted={sortField === 'sended_to_legend'}
                 sortDirection={sortDirection}
@@ -581,7 +598,6 @@ const DashboardPage = () => {
           <tbody>
             {units.map(unit => (
               <TableRow key={unit.id}>
-                <TableCell>{unit.id}</TableCell>
                 <TableCell>{unit.name_of_unit || '—'}</TableCell>
                 <TableCell>{unit.mil_unit}</TableCell>
                 <TableCell>{unit.brigade_or_higher || '—'}</TableCell>
@@ -591,6 +607,7 @@ const DashboardPage = () => {
                     {getStatusLabel(unit.status)}
                   </StatusBadge>
                 </TableCell>
+                <TableCell>{unit.computer_name || '—'}</TableCell>
                 <TableCell>
                   {unit.sended_to_legend === 1 ? 'Так' : 'Ні'}
                 </TableCell>

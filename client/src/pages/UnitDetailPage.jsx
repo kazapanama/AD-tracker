@@ -400,6 +400,13 @@ const UnitDetailPage = () => {
             </DetailValue>
           </UnitDetail>
           
+          {unit.computer_name && (
+            <UnitDetail>
+              <DetailLabel>Ім'я комп'ютера:</DetailLabel>
+              <DetailValue>{unit.computer_name}</DetailValue>
+            </UnitDetail>
+          )}
+          
           {unit.description && (
             <Description>
               <DescriptionLabel>Опис:</DescriptionLabel>

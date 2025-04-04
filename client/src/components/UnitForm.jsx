@@ -152,7 +152,8 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
     email: '',
     status: 'Accepted Request',
     date_when_finished: '',
-    sended_to_legend: 0
+    sended_to_legend: 0,
+    computer_name: ''
   });
   
   const [errors, setErrors] = useState({});
@@ -167,7 +168,8 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
         email: unit.email || '',
         status: unit.status || 'Accepted Request',
         date_when_finished: unit.date_when_finished || '',
-        sended_to_legend: unit.sended_to_legend || 0
+        sended_to_legend: unit.sended_to_legend || 0,
+        computer_name: unit.computer_name || ''
       });
     }
   }, [unit]);
@@ -195,6 +197,10 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
       newErrors.mil_unit = 'Поле "Військова частина" є обов\'язковим';
     }
     
+    if (!formData.computer_name.trim()) {
+      newErrors.computer_name = 'Поле "Ім\'я комп\'ютера" є обов\'язковим';
+    }
+    
     if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Невірний формат електронної пошти';
     }
@@ -219,7 +225,8 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
     { value: 'Quarantine - 2', label: 'Карантин - 2' },
     { value: 'Quarantine - 3', label: 'Карантин - 3' },
     { value: 'Domain Added', label: 'Заведено в домен' },
-    { value: 'Completed', label: 'Виконано' }
+    { value: 'Completed', label: 'Виконано' },
+    { value: 'Rejected', label: 'Відхилено' }
   ];
   
   return (
@@ -270,6 +277,18 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
             onChange={handleChange}
           />
           {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+        </FormGroup>
+        
+        <FormGroup>
+          <Label htmlFor="computer_name">Ім'я комп'ютера*</Label>
+          <Input
+            type="text"
+            id="computer_name"
+            name="computer_name"
+            value={formData.computer_name}
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
         
         <FormGroup>

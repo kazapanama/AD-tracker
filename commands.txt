@@ -1,0 +1,121 @@
+WINDOWS
+
+PS C:\Users\Techno7\Desktop\AD-tracker> tar -czvf my-web-app-full.tar.gz `
+>>     --exclude='.git' `
+>>     --exclude='*.tar' `
+>>     --exclude='*.tar.gz' `
+>>     --exclude='Dockerfile' `
+>>     --exclude='.dockerignore' `
+>>     .
+
+scp .\my-web-app-full.tar.gz rakuletka@[IP]:~/
+
+
+UBUNTU                 
+tar -xzvf my-web-app-full.tar.gz
+                                                                                             es
+cd client/
+sudo chmod +x .bin/vite
+
+sudo chmod +x ./node_modules/.bin/vite
+cd ..
+cd server/
+
+sudo chmod +x ./node_modules/.bin/nodemon
+cd ..
+sudo chmod +x ./node_modules/@esbuild/linux-x64/bin/esbuild
+
+sudo npm run dev
+
+# Nginx Configuration for AD-Tracker with HTTPS
+
+## 1. Install required packages
+```bash
+sudo apt update
+sudo apt install nginx certbot python3-certbot-nginx
+```
+
+## 2. Create Nginx configuration for your domain
+```bash
+sudo nano /etc/nginx/sites-available/ad-tracker.conf
+```
+
+Add the following configuration:
+
+```nginx
+server {
+    listen 80;
+    server_name ad-tracker.horyzont.ddu.ua;
+    
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+
+`
+
+## 5. Starting the application
+
+Start your server:
+```bash
+cd /path/to/AD-tracker/server
+npm run start
+```
+
+Start your client for development (through Nginx reverse proxy):
+```bash
+cd /path/to/AD-tracker/client
+npm run dev
+```
+
+Or build for production:
+```bash
+cd /path/to/AD-tracker/client
+npm run build
+```
+
+## 6. Set up systemd service to automatically start the application (optional)
+
+```bash
+sudo nano /etc/systemd/system/ad-tracker-server.service
+```
+
+Add:
+```
+[Unit]
+Description=AD Tracker Server
+After=network.target
+
+[Service]
+Type=simple
+User=rakuletka
+WorkingDirectory=/home/rakuletka/AD-tracker/server
+ExecStart=/usr/bin/npm run start
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then:
+```bash
+sudo systemctl enable ad-tracker-server
+sudo systemctl start ad-tracker-server
+```
+
+## 7. Database location
+
+The database file will be stored in /home/rakuletka/database.sqlite if running on Linux. Make sure the directory has the proper permissions:
+
+```bash
+sudo mkdir -p /home/rakuletka
+sudo chown -R youruser:yourgroup /home/rakuletka
+```
+
+## 8. Troubleshooting common issues
+
+- Check Nginx logs: `sudo tail -f /var/log/nginx/error.log`
+- Check application logs: `journalctl -u ad-tracker-server`
+- Verify permissions to the database directory
+- Make sure ports 3000 and 443 are open in your firewall

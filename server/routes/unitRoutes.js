@@ -12,6 +12,17 @@ router.get('/units', (req, res) => {
   });
 });
 
+// Search units - moved to be before specific ID route
+router.get('/units/search/:query', (req, res) => {
+  const query = req.params.query;
+  Unit.search(query, (err, units) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(units);
+  });
+});
+
 // Get unit by ID
 router.get('/units/:id', (req, res) => {
   const id = req.params.id;
@@ -28,7 +39,7 @@ router.get('/units/:id', (req, res) => {
 
 // Create new unit
 router.post('/units', (req, res) => {
-  const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished } = req.body;
+  const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name } = req.body;
   
   if (!mil_unit) {
     return res.status(400).json({ error: 'Military unit is required' });
@@ -41,7 +52,9 @@ router.post('/units', (req, res) => {
     description: description || null,
     email: email || null,
     status: status || 'Accepted Request',
-    date_when_finished: date_when_finished || null
+    date_when_finished: date_when_finished || null,
+    sended_to_legend: sended_to_legend || 0,
+    computer_name: computer_name || null
   };
   
   Unit.create(newUnit, (err, id) => {
@@ -55,7 +68,7 @@ router.post('/units', (req, res) => {
 // Update unit
 router.put('/units/:id', (req, res) => {
   const id = req.params.id;
-  const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished } = req.body;
+  const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name } = req.body;
   
   if (!mil_unit) {
     return res.status(400).json({ error: 'Military unit is required' });
@@ -68,7 +81,9 @@ router.put('/units/:id', (req, res) => {
     description: description || null,
     email: email || null,
     status: status || 'Accepted Request',
-    date_when_finished: date_when_finished || null
+    date_when_finished: date_when_finished || null,
+    sended_to_legend: sended_to_legend || 0,
+    computer_name: computer_name || null
   };
   
   Unit.update(id, updatedUnit, (err) => {
@@ -87,17 +102,6 @@ router.delete('/units/:id', (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     res.json({ message: 'Unit deleted successfully' });
-  });
-});
-
-// Search units
-router.get('/units/search/:query', (req, res) => {
-  const query = req.params.query;
-  Unit.search(query, (err, units) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(units);
   });
 });
 

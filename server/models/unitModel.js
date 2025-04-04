@@ -10,10 +10,10 @@ class Unit {
   }
 
   static create(unit, callback) {
-    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished } = unit;
+    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name } = unit;
     db.run(
-      'INSERT INTO units (name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished],
+      'INSERT INTO units (name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend || 0, computer_name],
       function(err) {
         callback(err, this.lastID);
       }
@@ -21,10 +21,10 @@ class Unit {
   }
 
   static update(id, unit, callback) {
-    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished } = unit;
+    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name } = unit;
     db.run(
-      'UPDATE units SET name_of_unit = ?, brigade_or_higher = ?, mil_unit = ?, description = ?, email = ?, status = ?, date_when_finished = ? WHERE id = ?',
-      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, id],
+      'UPDATE units SET name_of_unit = ?, brigade_or_higher = ?, mil_unit = ?, description = ?, email = ?, status = ?, date_when_finished = ?, sended_to_legend = ?, computer_name = ? WHERE id = ?',
+      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend || 0, computer_name, id],
       callback
     );
   }
@@ -42,8 +42,9 @@ class Unit {
        OR mil_unit LIKE ? 
        OR description LIKE ? 
        OR email LIKE ?
+       OR computer_name LIKE ?
        ORDER BY id DESC`,
-      [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm],
+      [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm],
       callback
     );
   }
