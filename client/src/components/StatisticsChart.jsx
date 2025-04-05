@@ -46,6 +46,7 @@ const StatCard = styled.div`
       case 'Quarantine - 2': return '#ffe0b2';
       case 'Quarantine - 3': return '#ffccbc';
       case 'Completed': return '#b2dfdb';
+      case 'Rejected': return '#ef9a9a';
       default: return '#e0e0e0';
     }
   }};
@@ -59,6 +60,7 @@ const StatCard = styled.div`
       case 'Quarantine - 2': return '#ef6c00';
       case 'Quarantine - 3': return '#d84315';
       case 'Completed': return '#00695c';
+      case 'Rejected': return '#c62828';
       default: return '#616161';
     }
   }};
@@ -125,9 +127,10 @@ const BarInner = styled.div`
       case 'Quarantine - 2': return '#ff9800';
       case 'Quarantine - 3': return '#ff5722';
       case 'Completed': return '#009688';
+      case 'Rejected': return '#f44336';
       default: return '#9e9e9e';
     }
-  }};
+  }}
 `;
 
 const getTotalCount = (stats) => {
@@ -144,6 +147,7 @@ const getStatusLabel = (status) => {
     case 'Quarantine - 2': return 'Карантин - 2';
     case 'Quarantine - 3': return 'Карантин - 3';
     case 'Completed': return 'Виконано';
+    case 'Rejected': return 'Відхилено';
     default: return status;
   }
 };

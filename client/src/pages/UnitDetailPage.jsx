@@ -96,6 +96,7 @@ const StatusBadge = styled.span`
       case 'Quarantine - 2': return '#ffe0b2';
       case 'Quarantine - 3': return '#ffccbc';
       case 'Completed': return '#b2dfdb';
+      case 'Rejected': return '#ef9a9a';
       default: return '#e0e0e0';
     }
   }};
@@ -109,6 +110,7 @@ const StatusBadge = styled.span`
       case 'Quarantine - 2': return '#ef6c00';
       case 'Quarantine - 3': return '#d84315';
       case 'Completed': return '#00695c';
+      case 'Rejected': return '#c62828';
       default: return '#616161';
     }
   }};
@@ -249,6 +251,7 @@ const getStatusLabel = (status) => {
     case 'Quarantine - 3': return 'Карантин - 3';
     case 'Domain Added': return 'Заведено в домен';
     case 'Completed': return 'Виконано';
+    case 'Rejected': return 'Відхилено';
     default: return status;
   }
 };
