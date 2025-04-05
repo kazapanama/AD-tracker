@@ -4,35 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getStats } from '../utils/api';
 import { clearSearch } from '../store/slices/searchSlice';
 import StatisticsChart from '../components/StatisticsChart';
-import SearchBar from '../components/SearchBar';
 import UnitCard from '../components/UnitCard';
 
 const HomeContainer = styled.div``;
-
-const SearchResultsContainer = styled.div`
-  margin-top: 2rem;
-`;
-
-const ResultsTitle = styled.h2`
-  font-size: 1.5rem;
-  color: #4b0082;
-  margin-bottom: 1.5rem;
-`;
-
-const ResultsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-`;
-
-const NoResults = styled.div`
-  text-align: center;
-  padding: 3rem;
-  color: #666;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  margin-top: 2rem;
-`;
 
 const LoadingSpinner = styled.div`
   display: flex;
@@ -81,18 +55,9 @@ const RefreshButton = styled.button`
   }
 `;
 
-const ResultsCount = styled.div`
-  background-color: #f5f0ff;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  color: #4b0082;
-`;
-
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { filteredResults, loading: searchLoading, showResults, error: searchError } = useSelector(state => state.search);
+  const { error: searchError } = useSelector(state => state.search);
   
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +96,8 @@ const HomePage = () => {
         'Quarantine - 2', 
         'Quarantine - 3', 
         'Domain Added', 
-        'Completed'
+        'Completed',
+        'Rejected'
       ];
       
       const completeStats = allStatuses.map(status => {
@@ -160,9 +126,7 @@ const HomePage = () => {
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {searchError && <ErrorMessage>{searchError}</ErrorMessage>}
       
-      <SearchBar />
-      
-      {loading && !showResults ? (
+      {loading ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -176,30 +140,6 @@ const HomePage = () => {
             </div>
           </div>
         </>
-      )}
-      
-      {showResults && (
-        <SearchResultsContainer>
-          <ResultsTitle>Результати пошуку</ResultsTitle>
-          <ResultsCount>
-            Знайдено результатів: {filteredResults.length}
-          </ResultsCount>
-          
-          {searchLoading ? (
-            <LoadingSpinner />
-          ) : filteredResults.length > 0 ? (
-            <ResultsGrid>
-              {filteredResults.map(unit => (
-                <UnitCard key={unit.id} unit={unit} />
-              ))}
-            </ResultsGrid>
-          ) : (
-            <NoResults>
-              <h3>Нічого не знайдено</h3>
-              <p>Спробуйте змінити параметри пошуку</p>
-            </NoResults>
-          )}
-        </SearchResultsContainer>
       )}
     </HomeContainer>
   );

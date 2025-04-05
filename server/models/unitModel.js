@@ -34,16 +34,16 @@ class Unit {
   }
 
   static search(query, callback) {
-    const searchTerm = `%${query}%`;
+    const searchTerm = `%${query.toLowerCase()}%`;
     db.all(
       `SELECT * FROM units 
-       WHERE name_of_unit LIKE ? 
-       OR brigade_or_higher LIKE ? 
-       OR mil_unit LIKE ? 
-       OR description LIKE ? 
-       OR email LIKE ?
-       OR computer_name LIKE ?
-       ORDER BY id DESC`,
+       WHERE LOWER(name_of_unit) LIKE ? 
+       OR LOWER(brigade_or_higher) LIKE ? 
+       OR LOWER(mil_unit) LIKE ? 
+       OR LOWER(description) LIKE ? 
+       OR LOWER(email) LIKE ?
+       OR LOWER(computer_name) LIKE ?
+       ORDER BY id DESC LIMIT 20`,
       [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm],
       callback
     );

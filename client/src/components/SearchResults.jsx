@@ -2,13 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearSearch } from '../store/slices/searchSlice';
+import { clearSearch, hideResults } from '../store/slices/searchSlice';
 
 const ResultsDropdown = styled.div`
   position: absolute;
   top: 100%;
-  right: 0;
-  width: 400px;
+  left: 0;
+  width: 300px;
   max-height: 400px;
   overflow-y: auto;
   background-color: white;
@@ -17,6 +17,10 @@ const ResultsDropdown = styled.div`
   border: 1px solid #eee;
   z-index: 1000;
   margin-top: 0.5rem;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const ResultItem = styled.div`
@@ -38,11 +42,17 @@ const ResultTitle = styled.div`
   font-weight: 500;
   color: #4b0082;
   margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const ResultSubtitle = styled.div`
+const ResultComputer = styled.div`
   font-size: 0.9rem;
   color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const NoResults = styled.div`
@@ -65,6 +75,22 @@ const ResultCount = styled.div`
   color: #4b0082;
 `;
 
+const CloseButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #999;
+  cursor: pointer;
+  padding: 0 5px;
+  
+  &:hover {
+    color: #4b0082;
+  }
+`;
+
 const SearchResults = () => {
   const { filteredResults, loading, showResults } = useSelector(state => state.search);
   const navigate = useNavigate();
@@ -75,16 +101,22 @@ const SearchResults = () => {
     dispatch(clearSearch());
   };
   
+  const handleCloseResults = (e) => {
+    e.stopPropagation();
+    dispatch(hideResults());
+  };
+  
   if (!showResults) return null;
   
   return (
     <ResultsDropdown>
+      <CloseButton onClick={handleCloseResults}>×</CloseButton>
       {loading ? (
         <LoadingText>Завантаження...</LoadingText>
       ) : filteredResults.length > 0 ? (
         <>
           <ResultCount>
-            Знайдено результатів: {filteredResults.length}
+            Знайдено: {filteredResults.length}
           </ResultCount>
           {filteredResults.map(unit => (
             <ResultItem 
@@ -94,9 +126,9 @@ const SearchResults = () => {
               <ResultTitle>
                 {unit.name_of_unit || unit.mil_unit}
               </ResultTitle>
-              <ResultSubtitle>
-                {unit.brigade_or_higher ? `${unit.brigade_or_higher} • ` : ''}{unit.mil_unit}
-              </ResultSubtitle>
+              <ResultComputer>
+                {unit.computer_name ? `ПК: ${unit.computer_name}` : 'ПК: не вказано'}
+              </ResultComputer>
             </ResultItem>
           ))}
         </>

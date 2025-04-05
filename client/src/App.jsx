@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Provider } from 'react-redux';
 import { store } from './store';
@@ -46,6 +46,7 @@ const Logo = styled.h1`
 const NavLinks = styled.div`
   display: flex;
   gap: 2rem;
+  align-items: center;
 `;
 
 const StyledLink = styled(Link)`
@@ -79,50 +80,54 @@ const Footer = styled.footer`
 
 const SearchContainer = styled.div`
   position: relative;
-  width: 400px;
-  margin-left: auto;
-  display: ${props => props.showOnHomepage ? 'none' : 'block'};
+  width: 250px;
+  margin-right: 1rem;
 
   @media (max-width: 768px) {
-    width: 250px;
+    width: 180px;
   }
 `;
 
-function App() {
-  // We'll use window.location.pathname to determine if we're on the homepage
-  const isHomePage = window.location.pathname === '/';
+const AppContent = () => {
+  const location = useLocation();
+  
+  return (
+    <AppContainer>
+      <Header>
+        <Nav>
+          <LogoLink to="/">
+            <Logo>AD-tracker</Logo>
+          </LogoLink>
+          <NavLinks>
+            <SearchContainer>
+              <SearchBar inHeader={true} />
+              <SearchResults />
+            </SearchContainer>
+            <StyledLink to="/">Головна</StyledLink>
+            <StyledLink to="/dashboard">Панель керування</StyledLink>
+          </NavLinks>
+        </Nav>
+      </Header>
+      
+      <Main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/units/:id" element={<UnitDetailPage />} />
+        </Routes>
+      </Main>
+      
+      <Footer>
+        &copy; {new Date().getFullYear()} AD-tracker - Система відслідковування військових підрозділів
+      </Footer>
+    </AppContainer>
+  );
+};
 
+function App() {
   return (
     <Provider store={store}>
-      <AppContainer>
-        <Header>
-          <Nav>
-            <LogoLink to="/">
-              <Logo>AD-tracker</Logo>
-            </LogoLink>
-            <NavLinks>
-              <SearchContainer showOnHomepage={isHomePage}>
-                <SearchBar inHeader={true} />
-                <SearchResults />
-              </SearchContainer>
-              <StyledLink to="/">Головна</StyledLink>
-              <StyledLink to="/dashboard">Панель керування</StyledLink>
-            </NavLinks>
-          </Nav>
-        </Header>
-        
-        <Main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/units/:id" element={<UnitDetailPage />} />
-          </Routes>
-        </Main>
-        
-        <Footer>
-          &copy; {new Date().getFullYear()} AD-tracker - Система відслідковування військових підрозділів
-        </Footer>
-      </AppContainer>
+      <AppContent />
     </Provider>
   );
 }
