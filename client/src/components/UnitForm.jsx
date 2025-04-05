@@ -1,147 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-
-const FormContainer = styled.form`
-  background-color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  
-  &:focus {
-    border-color: #4b0082;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(75, 0, 130, 0.2);
-  }
-`;
-
-const CheckboxContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-const CheckboxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  font-weight: 500;
-`;
-
-const Checkbox = styled.input`
-  margin-right: 0.5rem;
-  width: 1.2rem;
-  height: 1.2rem;
-  cursor: pointer;
-  accent-color: #4b0082;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  min-height: 100px;
-  resize: vertical;
-  
-  &:focus {
-    border-color: #4b0082;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(75, 0, 130, 0.2);
-  }
-`;
-
-const Select = styled.select`
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1em;
-  
-  &:focus {
-    border-color: #4b0082;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(75, 0, 130, 0.2);
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-`;
-
-const SubmitButton = styled.button`
-  background-color: #4b0082;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  
-  &:hover {
-    background-color: #9370db;
-    transform: translateY(-1px);
-  }
-`;
-
-const CancelButton = styled.button`
-  background-color: white;
-  color: #4b0082;
-  border: 1px solid #4b0082;
-  border-radius: 6px;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
-
-const ErrorMessage = styled.div`
-  color: #f44336;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-`;
+import styles from './UnitForm.module.css';
 
 const UnitForm = ({ unit, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -230,33 +88,36 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
   ];
   
   return (
-    <FormContainer onSubmit={handleSubmit}>
-      <FormGrid>
-        <FormGroup>
-          <Label htmlFor="name_of_unit">Назва підрозділу</Label>
-          <Input
+    <form className={styles.formContainer} onSubmit={handleSubmit}>
+      <div className={styles.formGrid}>
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="name_of_unit">Назва підрозділу</label>
+          <input
+            className={styles.input}
             type="text"
             id="name_of_unit"
             name="name_of_unit"
             value={formData.name_of_unit}
             onChange={handleChange}
           />
-        </FormGroup>
+        </div>
         
-        <FormGroup>
-          <Label htmlFor="brigade_or_higher">Бригада або вище</Label>
-          <Input
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="brigade_or_higher">Бригада або вище</label>
+          <input
+            className={styles.input}
             type="text"
             id="brigade_or_higher"
             name="brigade_or_higher"
             value={formData.brigade_or_higher}
             onChange={handleChange}
           />
-        </FormGroup>
+        </div>
         
-        <FormGroup>
-          <Label htmlFor="mil_unit">Військова частина*</Label>
-          <Input
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="mil_unit">Військова частина*</label>
+          <input
+            className={styles.input}
             type="text"
             id="mil_unit"
             name="mil_unit"
@@ -264,24 +125,26 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
             onChange={handleChange}
             required
           />
-          {errors.mil_unit && <ErrorMessage>{errors.mil_unit}</ErrorMessage>}
-        </FormGroup>
+          {errors.mil_unit && <div className={styles.errorMessage}>{errors.mil_unit}</div>}
+        </div>
         
-        <FormGroup>
-          <Label htmlFor="email">Електронна пошта</Label>
-          <Input
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="email">Електронна пошта</label>
+          <input
+            className={styles.input}
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-        </FormGroup>
+          {errors.email && <div className={styles.errorMessage}>{errors.email}</div>}
+        </div>
         
-        <FormGroup>
-          <Label htmlFor="computer_name">Ім'я комп'ютера*</Label>
-          <Input
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="computer_name">Ім'я комп'ютера*</label>
+          <input
+            className={styles.input}
             type="text"
             id="computer_name"
             name="computer_name"
@@ -289,11 +152,12 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
             onChange={handleChange}
             required
           />
-        </FormGroup>
+        </div>
         
-        <FormGroup>
-          <Label htmlFor="status">Статус</Label>
-          <Select
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="status">Статус</label>
+          <select
+            className={styles.select}
             id="status"
             name="status"
             value={formData.status}
@@ -304,56 +168,59 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
                 {option.label}
               </option>
             ))}
-          </Select>
-        </FormGroup>
+          </select>
+        </div>
         
-        <FormGroup>
-          <Label htmlFor="date_when_finished">Дата завершення</Label>
-          <Input
+        <div className={styles.formGroup}>
+          <label className={styles.label} htmlFor="date_when_finished">Дата завершення</label>
+          <input
+            className={styles.input}
             type="date"
             id="date_when_finished"
             name="date_when_finished"
             value={formData.date_when_finished}
             onChange={handleChange}
           />
-        </FormGroup>
-      </FormGrid>
+        </div>
+      </div>
       
-      <FormGroup>
-        <Label htmlFor="description">Опис</Label>
-        <TextArea
+      <div className={styles.formGroup}>
+        <label className={styles.label} htmlFor="description">Опис</label>
+        <textarea
+          className={styles.textArea}
           id="description"
           name="description"
           value={formData.description}
           onChange={handleChange}
         />
-      </FormGroup>
+      </div>
       
-      <FormGroup>
-        <CheckboxContainer>
-          <CheckboxLabel>
-            <Checkbox
+      <div className={styles.formGroup}>
+        <div className={styles.checkboxContainer}>
+          <label className={styles.checkboxLabel}>
+            <input
+              className={styles.checkbox}
               type="checkbox"
               name="sended_to_legend"
               checked={formData.sended_to_legend === 1}
               onChange={handleChange}
             />
             Відправлено в легенду
-          </CheckboxLabel>
-        </CheckboxContainer>
-      </FormGroup>
+          </label>
+        </div>
+      </div>
       
-      <ButtonGroup>
+      <div className={styles.buttonGroup}>
         {onCancel && (
-          <CancelButton type="button" onClick={onCancel}>
+          <button className={styles.cancelButton} type="button" onClick={onCancel}>
             Скасувати
-          </CancelButton>
+          </button>
         )}
-        <SubmitButton type="submit">
+        <button className={styles.submitButton} type="submit">
           {unit ? 'Оновити' : 'Створити'}
-        </SubmitButton>
-      </ButtonGroup>
-    </FormContainer>
+        </button>
+      </div>
+    </form>
   );
 };
 

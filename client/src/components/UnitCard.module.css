@@ -1,0 +1,126 @@
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  margin: 0;
+  color: #4b0082;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Status colors */
+.acceptedRequest {
+  background-color: #e1bee7;
+  color: #6a1b9a;
+}
+
+.usersCreated {
+  background-color: #bbdefb;
+  color: #1565c0;
+}
+
+.jiraRequestMade {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.domainAdded {
+  background-color: #dcedc8;
+  color: #558b2f;
+}
+
+.quarantine1 {
+  background-color: #fff9c4;
+  color: #f9a825;
+}
+
+.quarantine2 {
+  background-color: #ffe0b2;
+  color: #ef6c00;
+}
+
+.quarantine3 {
+  background-color: #ffccbc;
+  color: #d84315;
+}
+
+.completed {
+  background-color: #b2dfdb;
+  color: #00695c;
+}
+
+.defaultStatus {
+  background-color: #e0e0e0;
+  color: #616161;
+}
+
+.cardBody {
+  margin-bottom: 1rem;
+}
+
+.infoRow {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.infoLabel {
+  font-weight: 500;
+  min-width: 130px;
+  color: #555;
+}
+
+.infoValue {
+  color: #333;
+}
+
+.description {
+  color: #666;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.viewButton {
+  background-color: #4b0082;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.viewButton:hover {
+  background-color: #9370db;
+}

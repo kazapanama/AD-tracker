@@ -1,0 +1,93 @@
+.searchContainer {
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.searchContainerHeader {
+  margin-bottom: 0;
+}
+
+.searchForm {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.searchFormHeader {
+  max-width: 100%;
+  margin: 0;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-right: none;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background-color: white;
+}
+
+.searchInputHeader {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #4b0082;
+}
+
+.searchInputHeader:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.searchInput::placeholder {
+  color: #999;
+}
+
+.searchInputHeader::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.searchButton {
+  background-color: #4b0082;
+  color: white;
+  border: none;
+  border: 2px solid transparent;
+  border-left: none;
+  padding: 0 1.5rem;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.searchButtonHeader {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 0 0.75rem;
+}
+
+.searchButton:hover {
+  background-color: #9370db;
+}
+
+.searchButtonHeader:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.searchButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.searchButtonHeader svg {
+  width: 16px;
+  height: 16px;
+}
