@@ -367,7 +367,9 @@ const DashboardPage = () => {
     email: '',
     status: '',
     sended_to_legend: '',
-    computer_name: ''
+    computer_name: '',
+    date_from: '',
+    date_to: ''
   });
   
   useEffect(() => {
@@ -400,7 +402,9 @@ const DashboardPage = () => {
       email: '',
       status: '',
       sended_to_legend: '',
-      computer_name: ''
+      computer_name: '',
+      date_from: '',
+      date_to: ''
     });
     dispatch(clearFilters());
   };
@@ -540,6 +544,26 @@ const DashboardPage = () => {
             <option value="1">Так</option>
             <option value="0">Ні</option>
           </FilterSelect>
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Дата від</FilterLabel>
+          <FilterInput 
+            type="date" 
+            name="date_from"
+            value={filters.date_from}
+            onChange={handleFilterChange}
+          />
+        </FilterGroup>
+        
+        <FilterGroup>
+          <FilterLabel>Дата до</FilterLabel>
+          <FilterInput 
+            type="date" 
+            name="date_to"
+            value={filters.date_to}
+            onChange={handleFilterChange}
+          />
         </FilterGroup>
         
         <ClearFiltersButton onClick={handleClearFilters}>

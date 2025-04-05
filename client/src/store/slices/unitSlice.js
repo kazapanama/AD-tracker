@@ -113,6 +113,30 @@ const unitSlice = createSlice({
         for (const [filterField, filterValue] of Object.entries(state.filters)) {
           if (filterValue === '') continue; // Skip empty filters
           
+          // Date range filtering
+          if (filterField === 'date_from' && filterValue) {
+            const itemDate = new Date(item.date_when_finished || null);
+            const fromDate = new Date(filterValue);
+            
+            // Invalid dates should be excluded
+            if (isNaN(itemDate.getTime()) || itemDate < fromDate) {
+              return false;
+            }
+            continue;
+          }
+          
+          if (filterField === 'date_to' && filterValue) {
+            const itemDate = new Date(item.date_when_finished || null);
+            const toDate = new Date(filterValue);
+            toDate.setHours(23, 59, 59, 999); // Set to end of day
+            
+            // Invalid dates should be excluded
+            if (isNaN(itemDate.getTime()) || itemDate > toDate) {
+              return false;
+            }
+            continue;
+          }
+          
           // Skip items that don't match the filter
           const itemValue = item[filterField];
           if (typeof itemValue === 'string') {
