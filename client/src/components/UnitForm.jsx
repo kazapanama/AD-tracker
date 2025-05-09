@@ -8,10 +8,10 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
     mil_unit: '',
     description: '',
     email: '',
-    status: 'Accepted Request',
+    status: 'Створені користувачі',
     date_when_finished: '',
-    sended_to_legend: 0,
-    computer_name: ''
+    computer_name: '',
+    ip_address: ''
   });
   
   const [errors, setErrors] = useState({});
@@ -24,10 +24,10 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
         mil_unit: unit.mil_unit || '',
         description: unit.description || '',
         email: unit.email || '',
-        status: unit.status || 'Accepted Request',
+        status: unit.status || 'Створені користувачі',
         date_when_finished: unit.date_when_finished || '',
-        sended_to_legend: unit.sended_to_legend || 0,
-        computer_name: unit.computer_name || ''
+        computer_name: unit.computer_name || '',
+        ip_address: unit.ip_address || ''
       });
     }
   }, [unit]);
@@ -76,15 +76,11 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
   };
   
   const statusOptions = [
-    { value: 'Accepted Request', label: 'Прийнята заявка' },
-    { value: 'Users Created', label: 'Створені користувачі' },
-    { value: 'Jira Request Made', label: 'Зроблена заявка в Jira' },
-    { value: 'Quarantine - 1', label: 'Карантин - 1' },
-    { value: 'Quarantine - 2', label: 'Карантин - 2' },
-    { value: 'Quarantine - 3', label: 'Карантин - 3' },
-    { value: 'Domain Added', label: 'Заведено в домен' },
-    { value: 'Completed', label: 'Виконано' },
-    { value: 'Rejected', label: 'Відхилено' }
+    { value: 'Створені користувачі', label: 'Створені користувачі' },
+    { value: 'Заявка в jira', label: 'Заявка в jira' },
+    { value: 'Прикінцева конфігурація', label: 'Прикінцева конфігурація' },
+    { value: 'finita', label: 'finita' },
+    { value: 'відхилено', label: 'відхилено' }
   ];
   
   return (
@@ -196,18 +192,15 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
       </div>
       
       <div className={styles.formGroup}>
-        <div className={styles.checkboxContainer}>
-          <label className={styles.checkboxLabel}>
-            <input
-              className={styles.checkbox}
-              type="checkbox"
-              name="sended_to_legend"
-              checked={formData.sended_to_legend === 1}
-              onChange={handleChange}
-            />
-            Відправлено в легенду
-          </label>
-        </div>
+        <label className={styles.label} htmlFor="ip_address">IP адреса</label>
+        <input
+          className={styles.input}
+          type="text"
+          id="ip_address"
+          name="ip_address"
+          value={formData.ip_address}
+          onChange={handleChange}
+        />
       </div>
       
       <div className={styles.buttonGroup}>

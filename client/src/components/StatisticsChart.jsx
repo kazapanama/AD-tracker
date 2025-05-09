@@ -38,29 +38,21 @@ const StatsGrid = styled.div`
 const StatCard = styled.div`
   background-color: ${props => {
     switch (props.status) {
-      case 'Accepted Request': return '#e1bee7';
-      case 'Users Created': return '#bbdefb';
-      case 'Jira Request Made': return '#c8e6c9';
-      case 'Domain Added': return '#dcedc8';
-      case 'Quarantine - 1': return '#fff9c4';
-      case 'Quarantine - 2': return '#ffe0b2';
-      case 'Quarantine - 3': return '#ffccbc';
-      case 'Completed': return '#b2dfdb';
-      case 'Rejected': return '#ef9a9a';
+      case 'Створені користувачі': return '#bbdefb';
+      case 'Заявка в jira': return '#c8e6c9';
+      case 'Прикінцева конфігурація': return '#dcedc8';
+      case 'finita': return '#b2dfdb';
+      case 'відхилено': return '#ef9a9a';
       default: return '#e0e0e0';
     }
   }};
   color: ${props => {
     switch (props.status) {
-      case 'Accepted Request': return '#6a1b9a';
-      case 'Users Created': return '#1565c0';
-      case 'Jira Request Made': return '#2e7d32';
-      case 'Domain Added': return '#558b2f';
-      case 'Quarantine - 1': return '#f9a825';
-      case 'Quarantine - 2': return '#ef6c00';
-      case 'Quarantine - 3': return '#d84315';
-      case 'Completed': return '#00695c';
-      case 'Rejected': return '#c62828';
+      case 'Створені користувачі': return '#1565c0';
+      case 'Заявка в jira': return '#2e7d32';
+      case 'Прикінцева конфігурація': return '#558b2f';
+      case 'finita': return '#00695c';
+      case 'відхилено': return '#c62828';
       default: return '#616161';
     }
   }};
@@ -119,15 +111,11 @@ const BarInner = styled.div`
   width: ${props => `${props.percentage}%`};
   background-color: ${props => {
     switch (props.status) {
-      case 'Accepted Request': return '#9c27b0';
-      case 'Users Created': return '#2196f3';
-      case 'Jira Request Made': return '#4caf50';
-      case 'Domain Added': return '#8bc34a';
-      case 'Quarantine - 1': return '#ffc107';
-      case 'Quarantine - 2': return '#ff9800';
-      case 'Quarantine - 3': return '#ff5722';
-      case 'Completed': return '#009688';
-      case 'Rejected': return '#f44336';
+      case 'Створені користувачі': return '#2196f3';
+      case 'Заявка в jira': return '#4caf50';
+      case 'Прикінцева конфігурація': return '#8bc34a';
+      case 'finita': return '#009688';
+      case 'відхилено': return '#f44336';
       default: return '#9e9e9e';
     }
   }}
@@ -139,15 +127,11 @@ const getTotalCount = (stats) => {
 
 const getStatusLabel = (status) => {
   switch (status) {
-    case 'Accepted Request': return 'Прийнята заявка';
-    case 'Users Created': return 'Створені користувачі';
-    case 'Jira Request Made': return 'Зроблена заявка в Jira';
-    case 'Domain Added': return 'Заведено в домен';
-    case 'Quarantine - 1': return 'Карантин - 1';
-    case 'Quarantine - 2': return 'Карантин - 2';
-    case 'Quarantine - 3': return 'Карантин - 3';
-    case 'Completed': return 'Виконано';
-    case 'Rejected': return 'Відхилено';
+    case 'Створені користувачі': return 'Створені користувачі';
+    case 'Заявка в jira': return 'Заявка в jira';
+    case 'Прикінцева конфігурація': return 'Прикінцева конфігурація';
+    case 'finita': return 'Завершено';
+    case 'відхилено': return 'Відхилено';
     default: return status;
   }
 };

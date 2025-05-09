@@ -29,10 +29,10 @@ const initializeDatabase = () => {
         mil_unit TEXT NOT NULL,
         description TEXT,
         email TEXT,
-        status TEXT CHECK(status IN ('Accepted Request', 'Users Created', 'Jira Request Made', 'Domain Added', 'Quarantine - 1', 'Quarantine - 2', 'Quarantine - 3', 'Completed', 'Rejected')) DEFAULT 'Accepted Request',
+        status TEXT CHECK(status IN ('Створені користувачі', 'Заявка в jira', 'Прикінцева конфігурація', 'finita', 'відхилено')) DEFAULT 'Створені користувачі',
         date_when_finished TEXT,
-        sended_to_legend INTEGER DEFAULT 0,
-        computer_name TEXT
+        computer_name TEXT,
+        ip_address TEXT
       )
     `);
     
@@ -43,11 +43,11 @@ const initializeDatabase = () => {
         return;
       }
       
-      // If sended_to_legend column doesn't exist, add it
-      const hasSendedToLegendColumn = rows.some(row => row.name === 'sended_to_legend');
-      if (!hasSendedToLegendColumn) {
-        db.run(`ALTER TABLE units ADD COLUMN sended_to_legend INTEGER DEFAULT 0`);
-        console.log('Added sended_to_legend column to units table');
+      // If ip_address column doesn't exist, add it
+      const hasIpAddressColumn = rows.some(row => row.name === 'ip_address');
+      if (!hasIpAddressColumn) {
+        db.run(`ALTER TABLE units ADD COLUMN ip_address TEXT`);
+        console.log('Added ip_address column to units table');
       }
       
       // If computer_name column doesn't exist, add it
@@ -57,15 +57,15 @@ const initializeDatabase = () => {
         console.log('Added computer_name column to units table');
       }
       
-      // Check and fix status constraint if needed
+      // Check and update status constraint
       db.get(`SELECT sql FROM sqlite_master WHERE type='table' AND name='units'`, (err, result) => {
         if (err) {
           console.error('Error getting table definition:', err);
           return;
         }
         
-        if (result && result.sql && !result.sql.includes("'Rejected'")) {
-          console.log('Status constraint needs update to include Rejected status');
+        if (result && result.sql && !result.sql.includes("'finita'")) {
+          console.log('Status constraint needs update to match new status values');
           
           // Create a temporary table with the correct constraint
           db.run(`
@@ -76,10 +76,10 @@ const initializeDatabase = () => {
               mil_unit TEXT NOT NULL,
               description TEXT,
               email TEXT,
-              status TEXT CHECK(status IN ('Accepted Request', 'Users Created', 'Jira Request Made', 'Domain Added', 'Quarantine - 1', 'Quarantine - 2', 'Quarantine - 3', 'Completed', 'Rejected')) DEFAULT 'Accepted Request',
+              status TEXT CHECK(status IN ('Створені користувачі', 'Заявка в jira', 'Прикінцева конфігурація', 'finita', 'відхилено')) DEFAULT 'Створені користувачі',
               date_when_finished TEXT,
-              sended_to_legend INTEGER DEFAULT 0,
-              computer_name TEXT
+              computer_name TEXT,
+              ip_address TEXT
             )
           `, (createErr) => {
             if (createErr) {
@@ -87,8 +87,29 @@ const initializeDatabase = () => {
               return;
             }
             
-            // Copy data
-            db.run(`INSERT INTO units_new SELECT * FROM units`, (copyErr) => {
+            // Copy data and map old status values to new ones
+            db.run(`
+              INSERT INTO units_new(id, name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, computer_name, ip_address)
+              SELECT 
+                id, 
+                name_of_unit, 
+                brigade_or_higher, 
+                mil_unit, 
+                description, 
+                email, 
+                CASE status
+                  WHEN 'Users Created' THEN 'Створені користувачі'
+                  WHEN 'Jira Request Made' THEN 'Заявка в jira'
+                  WHEN 'Domain Added' THEN 'Прикінцева конфігурація'
+                  WHEN 'Completed' THEN 'finita'
+                  WHEN 'Rejected' THEN 'відхилено'
+                  ELSE 'Створені користувачі'
+                END,
+                date_when_finished, 
+                computer_name,
+                NULL
+              FROM units
+            `, (copyErr) => {
               if (copyErr) {
                 console.error('Error copying data to new table:', copyErr);
                 return;
@@ -108,7 +129,7 @@ const initializeDatabase = () => {
                     return;
                   }
                   
-                  console.log('Successfully updated status constraint to include Rejected status');
+                  console.log('Successfully updated status constraint and data to match new status values');
                 });
               });
             });

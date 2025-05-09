@@ -89,15 +89,11 @@ const HomePage = () => {
       
       // Add missing statuses with count 0
       const allStatuses = [
-        'Accepted Request', 
-        'Users Created', 
-        'Jira Request Made', 
-        'Quarantine - 1', 
-        'Quarantine - 2', 
-        'Quarantine - 3', 
-        'Domain Added', 
-        'Completed',
-        'Rejected'
+        'Створені користувачі',
+        'Заявка в jira',
+        'Прикінцева конфігурація',
+        'finita',
+        'відхилено'
       ];
       
       const completeStats = allStatuses.map(status => {

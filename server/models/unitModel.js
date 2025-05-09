@@ -10,10 +10,10 @@ class Unit {
   }
 
   static create(unit, callback) {
-    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name } = unit;
+    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, computer_name, ip_address } = unit;
     db.run(
-      'INSERT INTO units (name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend || 0, computer_name],
+      'INSERT INTO units (name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, computer_name, ip_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, computer_name, ip_address],
       function(err) {
         callback(err, this.lastID);
       }
@@ -21,10 +21,10 @@ class Unit {
   }
 
   static update(id, unit, callback) {
-    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend, computer_name } = unit;
+    const { name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, computer_name, ip_address } = unit;
     db.run(
-      'UPDATE units SET name_of_unit = ?, brigade_or_higher = ?, mil_unit = ?, description = ?, email = ?, status = ?, date_when_finished = ?, sended_to_legend = ?, computer_name = ? WHERE id = ?',
-      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, sended_to_legend || 0, computer_name, id],
+      'UPDATE units SET name_of_unit = ?, brigade_or_higher = ?, mil_unit = ?, description = ?, email = ?, status = ?, date_when_finished = ?, computer_name = ?, ip_address = ? WHERE id = ?',
+      [name_of_unit, brigade_or_higher, mil_unit, description, email, status, date_when_finished, computer_name, ip_address, id],
       callback
     );
   }
@@ -43,8 +43,9 @@ class Unit {
        OR LOWER(description) LIKE ? 
        OR LOWER(email) LIKE ?
        OR LOWER(computer_name) LIKE ?
+       OR LOWER(ip_address) LIKE ?
        ORDER BY id DESC LIMIT 20`,
-      [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm],
+      [searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm],
       callback
     );
   }

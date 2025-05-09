@@ -36,3 +36,4 @@ build/
 Thumbs.db
 
 my-web-app-full.tar.gz
+**/.claude/settings.local.json

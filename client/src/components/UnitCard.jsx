@@ -4,28 +4,22 @@ import styles from './UnitCard.module.css';
 
 const getStatusLabel = (status) => {
   switch (status) {
-    case 'Accepted Request': return 'Прийнята заявка';
-    case 'Users Created': return 'Створені користувачі';
-    case 'Jira Request Made': return 'Зроблена заявка в Jira';
-    case 'Domain Added': return 'Заведено в домен';
-    case 'Quarantine - 1': return 'Карантин - 1';
-    case 'Quarantine - 2': return 'Карантин - 2';
-    case 'Quarantine - 3': return 'Карантин - 3';
-    case 'Completed': return 'Виконано';
+    case 'Створені користувачі': return 'Створені користувачі';
+    case 'Заявка в jira': return 'Заявка в jira';
+    case 'Прикінцева конфігурація': return 'Прикінцева конфігурація';
+    case 'finita': return 'finita';
+    case 'відхилено': return 'відхилено';
     default: return status;
   }
 };
 
 const getStatusClass = (status) => {
   switch (status) {
-    case 'Accepted Request': return styles.acceptedRequest;
-    case 'Users Created': return styles.usersCreated;
-    case 'Jira Request Made': return styles.jiraRequestMade;
-    case 'Domain Added': return styles.domainAdded;
-    case 'Quarantine - 1': return styles.quarantine1;
-    case 'Quarantine - 2': return styles.quarantine2;
-    case 'Quarantine - 3': return styles.quarantine3;
-    case 'Completed': return styles.completed;
+    case 'Створені користувачі': return styles.usersCreated;
+    case 'Заявка в jira': return styles.jiraRequestMade;
+    case 'Прикінцева конфігурація': return styles.domainAdded;
+    case 'finita': return styles.completed;
+    case 'відхилено': return styles.rejected;
     default: return styles.defaultStatus;
   }
 };
