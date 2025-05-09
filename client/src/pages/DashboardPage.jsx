@@ -354,7 +354,6 @@ const DashboardPage = () => {
     mil_unit: '',
     email: '',
     status: '',
-    sended_to_legend: '',
     computer_name: '',
     date_from: '',
     date_to: ''
@@ -389,7 +388,6 @@ const DashboardPage = () => {
       mil_unit: '',
       email: '',
       status: '',
-      sended_to_legend: '',
       computer_name: '',
       date_from: '',
       date_to: ''
@@ -517,18 +515,6 @@ const DashboardPage = () => {
           />
         </FilterGroup>
         
-        <FilterGroup>
-          <FilterLabel>Відправлено в легенду</FilterLabel>
-          <FilterSelect 
-            name="sended_to_legend"
-            value={filters.sended_to_legend}
-            onChange={handleFilterChange}
-          >
-            <option value="">Всі</option>
-            <option value="1">Так</option>
-            <option value="0">Ні</option>
-          </FilterSelect>
-        </FilterGroup>
         
         <FilterGroup>
           <FilterLabel>Дата від</FilterLabel>
@@ -595,11 +581,6 @@ const DashboardPage = () => {
                 sorted={sortField === 'computer_name'}
                 sortDirection={sortDirection}
               >Ім'я комп'ютера</TableHeader>
-              <TableHeader 
-                onClick={() => handleSort('sended_to_legend')}
-                sorted={sortField === 'sended_to_legend'}
-                sortDirection={sortDirection}
-              >В легенді</TableHeader>
               <TableHeader>Дії</TableHeader>
             </tr>
           </TableHead>
@@ -616,9 +597,6 @@ const DashboardPage = () => {
                   </StatusBadge>
                 </TableCell>
                 <TableCell>{unit.computer_name || '—'}</TableCell>
-                <TableCell>
-                  {unit.sended_to_legend === 1 ? 'Так' : 'Ні'}
-                </TableCell>
                 <TableCell>
                   <ViewLink to={`/units/${unit.id}`}>
                     Переглянути

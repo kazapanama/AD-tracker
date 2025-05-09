@@ -35,13 +35,15 @@ const searchSlice = createSlice({
       // Filter existing results based on the new query if we already have results
       if (state.results.length > 0) {
         const searchTerm = action.payload.toLowerCase();
-        state.filteredResults = state.results.filter(unit => 
+        state.filteredResults = state.results.filter(unit =>
           unit.name_of_unit?.toLowerCase().includes(searchTerm) ||
           unit.brigade_or_higher?.toLowerCase().includes(searchTerm) ||
           unit.mil_unit?.toLowerCase().includes(searchTerm) ||
           unit.description?.toLowerCase().includes(searchTerm) ||
           unit.email?.toLowerCase().includes(searchTerm) ||
-          unit.computer_name?.toLowerCase().includes(searchTerm)
+          unit.computer_name?.toLowerCase().includes(searchTerm) ||
+          unit.ip_address?.toLowerCase().includes(searchTerm) ||
+          unit.status?.toLowerCase().includes(searchTerm)
         );
       }
     },

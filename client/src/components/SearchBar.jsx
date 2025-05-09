@@ -38,7 +38,7 @@ const SearchBar = ({ inHeader = false, onSearch = null }) => {
         <input
           className={inHeader ? `${styles.searchInput} ${styles.searchInputHeader}` : styles.searchInput}
           type="text"
-          placeholder={inHeader ? "Швидкий пошук..." : "Пошук за назвою, частиною, бригадою або описом..."}
+          placeholder={inHeader ? "Швидкий пошук..." : "Пошук за будь-яким полем (назва, статус, бригада, IP, ПК...)..."}
           value={query}
           onChange={(e) => dispatch(setQuery(e.target.value))}
         />

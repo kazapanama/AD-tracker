@@ -34,7 +34,8 @@ export const deleteUnit = async (id) => {
 };
 
 export const searchUnits = async (query) => {
-  const response = await api.get(`/units/search/${query}`);
+  const encodedQuery = encodeURIComponent(query);
+  const response = await api.get(`/units/search/${encodedQuery}`);
   return response.data;
 };
 

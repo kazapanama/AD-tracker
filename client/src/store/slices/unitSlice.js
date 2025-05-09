@@ -143,11 +143,6 @@ const unitSlice = createSlice({
             if (!itemValue.toLowerCase().includes(filterValue.toLowerCase())) {
               return false;
             }
-          } else if (filterField === 'sended_to_legend') {
-            // Special handling for sended_to_legend numeric field
-            if (Number(itemValue) !== Number(filterValue)) {
-              return false;
-            }
           } else if (itemValue !== undefined && filterValue !== '') {
             // For boolean or exact match filters
             if (itemValue !== filterValue) {
