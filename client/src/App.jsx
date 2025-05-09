@@ -6,6 +6,7 @@ import { store } from './store';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import UnitDetailPage from './pages/UnitDetailPage';
+import StatisticsPage from './pages/StatisticsPage';
 import SearchBar from './components/SearchBar';
 import SearchResults from './components/SearchResults';
 
@@ -105,6 +106,7 @@ const AppContent = () => {
             </SearchContainer>
             <StyledLink to="/">Головна</StyledLink>
             <StyledLink to="/dashboard">Панель керування</StyledLink>
+            <StyledLink to="/statistics">Статистика</StyledLink>
           </NavLinks>
         </Nav>
       </Header>
@@ -114,6 +116,7 @@ const AppContent = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/units/:id" element={<UnitDetailPage />} />
+          <Route path="/statistics" element={<StatisticsPage />} />
         </Routes>
       </Main>
       
