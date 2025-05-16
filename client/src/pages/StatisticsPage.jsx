@@ -259,17 +259,21 @@ const StatisticsPage = () => {
     
     // Calculate progressive counts
     stats.forEach(item => {
-      if (item.status === 'відхилено') {
-        // Rejected status is counted separately
-        return;
-      }
-      
-      const statusIndex = statusOrder.indexOf(item.status);
-      if (statusIndex > -1) {
-        // Add counts to this status and all previous statuses
-        for (let i = 0; i <= statusIndex; i++) {
-          progressiveCounts[statusOrder[i]] += item.count;
+      // Handle normal statuses
+      if (item.status !== 'відхилено') {
+        const statusIndex = statusOrder.indexOf(item.status);
+        if (statusIndex > -1) {
+          // Add counts to this status and all previous statuses
+          for (let i = 0; i <= statusIndex; i++) {
+            progressiveCounts[statusOrder[i]] += item.count;
+          }
         }
+      } 
+      // Handle rejected status specially
+      else if (item.status === 'відхилено' && item.count > 0) {
+        // For rejected status, count as 1 users created and 1 jira ticket
+        progressiveCounts['Створені користувачі'] += item.count;
+        progressiveCounts['Заявка в jira'] += item.count;
       }
     });
     
