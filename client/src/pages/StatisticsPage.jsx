@@ -307,62 +307,11 @@ const StatisticsPage = () => {
         <LoadingSpinner />
       ) : (
         <>
-          {/* Regular Stats */}
-          <ChartContainer>
-            <ChartTitle>Загальна статистика запитів</ChartTitle>
-            
-            <ChartGrid>
-              <ChartSection>
-                <StatsGrid>
-                  {stats.slice(0, 4).map(item => (
-                    <StatCard key={item.status} status={item.status}>
-                      <StatValue>{item.count}</StatValue>
-                      <StatLabel>{getStatusLabel(item.status)}</StatLabel>
-                    </StatCard>
-                  ))}
-                </StatsGrid>
-                
-                <StatsGrid>
-                  {stats.slice(4).map(item => (
-                    <StatCard key={item.status} status={item.status}>
-                      <StatValue>{item.count}</StatValue>
-                      <StatLabel>{getStatusLabel(item.status)}</StatLabel>
-                    </StatCard>
-                  ))}
-                </StatsGrid>
-              </ChartSection>
-              
-              <ChartSection>
-                <BarChartContainer>
-                  {[...stats].sort((a, b) => b.count - a.count).map(item => {
-                    const totalUnits = getTotalCount(stats);
-                    const percentage = totalUnits > 0 ? (item.count / totalUnits) * 100 : 0;
-                    
-                    return (
-                      <BarGroup key={item.status}>
-                        <BarLabel>
-                          <StatusName>{getStatusLabel(item.status)}</StatusName>
-                          <StatusCount>{item.count}</StatusCount>
-                        </BarLabel>
-                        <BarOuter>
-                          <BarInner 
-                            percentage={percentage} 
-                            status={item.status} 
-                          />
-                        </BarOuter>
-                      </BarGroup>
-                    );
-                  })}
-                </BarChartContainer>
-              </ChartSection>
-            </ChartGrid>
-          </ChartContainer>
-          
           {/* Progressive Stats */}
           <ChartContainer>
-            <ChartTitle>Кумулятивна статистика процесів</ChartTitle>
+            <ChartTitle>Cтатистика всіх етапів</ChartTitle>
             <p style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-              Ця статистика відображає загальну кількість підрозділів, що пройшли кожен етап процесу.
+              Відображає загальну кількість етапів, яку було виконано при роботі з доменом.
             </p>
             
             <ChartGrid>
@@ -414,6 +363,57 @@ const StatisticsPage = () => {
                   
                   {/* Display rejected stats separately */}
                   {progressiveStats.filter(item => item.status === 'відхилено').map(item => {
+                    const totalUnits = getTotalCount(stats);
+                    const percentage = totalUnits > 0 ? (item.count / totalUnits) * 100 : 0;
+                    
+                    return (
+                      <BarGroup key={item.status}>
+                        <BarLabel>
+                          <StatusName>{getStatusLabel(item.status)}</StatusName>
+                          <StatusCount>{item.count}</StatusCount>
+                        </BarLabel>
+                        <BarOuter>
+                          <BarInner 
+                            percentage={percentage} 
+                            status={item.status} 
+                          />
+                        </BarOuter>
+                      </BarGroup>
+                    );
+                  })}
+                </BarChartContainer>
+              </ChartSection>
+            </ChartGrid>
+          </ChartContainer>
+
+          {/* Regular Stats */}
+          <ChartContainer>
+            <ChartTitle>Загальна статистика запитів</ChartTitle>
+            
+            <ChartGrid>
+              <ChartSection>
+                <StatsGrid>
+                  {stats.slice(0, 4).map(item => (
+                    <StatCard key={item.status} status={item.status}>
+                      <StatValue>{item.count}</StatValue>
+                      <StatLabel>{getStatusLabel(item.status)}</StatLabel>
+                    </StatCard>
+                  ))}
+                </StatsGrid>
+                
+                <StatsGrid>
+                  {stats.slice(4).map(item => (
+                    <StatCard key={item.status} status={item.status}>
+                      <StatValue>{item.count}</StatValue>
+                      <StatLabel>{getStatusLabel(item.status)}</StatLabel>
+                    </StatCard>
+                  ))}
+                </StatsGrid>
+              </ChartSection>
+              
+              <ChartSection>
+                <BarChartContainer>
+                  {[...stats].sort((a, b) => b.count - a.count).map(item => {
                     const totalUnits = getTotalCount(stats);
                     const percentage = totalUnits > 0 ? (item.count / totalUnits) * 100 : 0;
                     

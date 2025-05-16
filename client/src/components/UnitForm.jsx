@@ -87,7 +87,7 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
     <form className={styles.formContainer} onSubmit={handleSubmit}>
       <div className={styles.formGrid}>
         <div className={styles.formGroup}>
-          <label className={styles.label} htmlFor="name_of_unit">Назва підрозділу</label>
+          <label className={styles.label} htmlFor="name_of_unit">Позивний</label>
           <input
             className={styles.input}
             type="text"
@@ -99,7 +99,7 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
         </div>
         
         <div className={styles.formGroup}>
-          <label className={styles.label} htmlFor="brigade_or_higher">Бригада або вище</label>
+          <label className={styles.label} htmlFor="brigade_or_higher">Дійсна назва</label>
           <input
             className={styles.input}
             type="text"
@@ -179,18 +179,7 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
           />
         </div>
       </div>
-      
-      <div className={styles.formGroup}>
-        <label className={styles.label} htmlFor="description">Опис</label>
-        <textarea
-          className={styles.textArea}
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-      </div>
-      
+        
       <div className={styles.formGroup}>
         <label className={styles.label} htmlFor="ip_address">IP адреса</label>
         <input
@@ -202,6 +191,19 @@ const UnitForm = ({ unit, onSubmit, onCancel }) => {
           onChange={handleChange}
         />
       </div>
+
+
+      <div className={styles.formGroup}>
+        <label className={styles.label} htmlFor="description">Опис</label>
+        <textarea
+          className={styles.textArea}
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+      </div>
+      
       
       <div className={styles.buttonGroup}>
         {onCancel && (

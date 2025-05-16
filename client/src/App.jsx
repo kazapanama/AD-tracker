@@ -149,7 +149,6 @@ const AppContent = () => {
               <SearchBar inHeader={true} />
               <SearchResults />
             </SearchContainer>
-            <StyledLink to="/">Головна</StyledLink>
             <StyledLink to="#" onClick={(e) => { e.preventDefault(); clearFiltersOnNavigation('/dashboard'); }}>Панель керування</StyledLink>
             <StyledLink to="/statistics">Статистика</StyledLink>
           </NavLinks>
@@ -166,7 +165,7 @@ const AppContent = () => {
       </Main>
       
       <Footer>
-        &copy; {new Date().getFullYear()} AD-tracker - Система відслідковування військових підрозділів
+        &copy; {new Date().getFullYear()} AD-tracker 
       </Footer>
       
       {/* Floating Add Button */}

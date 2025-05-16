@@ -344,7 +344,7 @@ const UnitDetailPage = () => {
           
           {unit.name_of_unit && (
             <UnitDetail>
-              <DetailLabel>Назва підрозділу:</DetailLabel>
+              <DetailLabel>Позивний:</DetailLabel>
               <DetailValue>{unit.name_of_unit}</DetailValue>
             </UnitDetail>
           )}
@@ -356,7 +356,7 @@ const UnitDetailPage = () => {
           
           {unit.brigade_or_higher && (
             <UnitDetail>
-              <DetailLabel>Бригада або вище:</DetailLabel>
+              <DetailLabel>Дійсна назва:</DetailLabel>
               <DetailValue>{unit.brigade_or_higher}</DetailValue>
             </UnitDetail>
           )}
