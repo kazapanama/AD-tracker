@@ -139,7 +139,15 @@ const unitSlice = createSlice({
           
           // Skip items that don't match the filter
           const itemValue = item[filterField];
-          if (typeof itemValue === 'string') {
+          
+          // Use exact match for status field
+          if (filterField === 'status') {
+            if (itemValue !== filterValue) {
+              return false;
+            }
+          } 
+          // Use includes for text fields
+          else if (typeof itemValue === 'string') {
             if (!itemValue.toLowerCase().includes(filterValue.toLowerCase())) {
               return false;
             }
@@ -190,8 +198,65 @@ const unitSlice = createSlice({
       .addCase(fetchUnits.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload || [];
-        state.filteredItems = action.payload || [];
-        state.displayCount = action.payload?.length || 0;
+        
+        // If filters exist, apply them to the new items
+        if (Object.keys(state.filters).length > 0) {
+          // Apply existing filters to the new items
+          state.filteredItems = (action.payload || []).filter(item => {
+            // Check each filter
+            for (const [filterField, filterValue] of Object.entries(state.filters)) {
+              if (filterValue === '') continue; // Skip empty filters
+              
+              // Date range filtering
+              if (filterField === 'date_from' && filterValue) {
+                const itemDate = new Date(item.date_when_finished || null);
+                const fromDate = new Date(filterValue);
+                
+                if (isNaN(itemDate.getTime()) || itemDate < fromDate) {
+                  return false;
+                }
+                continue;
+              }
+              
+              if (filterField === 'date_to' && filterValue) {
+                const itemDate = new Date(item.date_when_finished || null);
+                const toDate = new Date(filterValue);
+                toDate.setHours(23, 59, 59, 999); // Set to end of day
+                
+                if (isNaN(itemDate.getTime()) || itemDate > toDate) {
+                  return false;
+                }
+                continue;
+              }
+              
+              // Regular filtering
+              const itemValue = item[filterField];
+              
+              // Use exact match for status field
+              if (filterField === 'status') {
+                if (itemValue !== filterValue) {
+                  return false;
+                }
+              } 
+              // Use includes for text fields
+              else if (typeof itemValue === 'string') {
+                if (!itemValue.toLowerCase().includes(filterValue.toLowerCase())) {
+                  return false;
+                }
+              } else if (itemValue !== undefined && filterValue !== '') {
+                if (itemValue !== filterValue) {
+                  return false;
+                }
+              }
+            }
+            return true;
+          });
+          state.displayCount = state.filteredItems.length;
+        } else {
+          // No filters, show all items
+          state.filteredItems = action.payload || [];
+          state.displayCount = action.payload?.length || 0;
+        }
       })
       .addCase(fetchUnits.rejected, (state, action) => {
         state.loading = false;

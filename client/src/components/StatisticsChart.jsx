@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const ChartContainer = styled.div`
   background-color: white;
@@ -60,9 +61,11 @@ const StatCard = styled.div`
   padding: 1.25rem;
   text-align: center;
   transition: transform 0.2s;
+  cursor: pointer;
   
   &:hover {
     transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -137,10 +140,15 @@ const getStatusLabel = (status) => {
 };
 
 const StatisticsChart = ({ stats }) => {
+  const navigate = useNavigate();
   const totalUnits = getTotalCount(stats);
   
   // Sort stats by count in descending order
   const sortedStats = [...stats].sort((a, b) => b.count - a.count);
+  
+  const handleStatusCardClick = (status) => {
+    navigate('/dashboard', { state: { filterStatus: status } });
+  };
   
   return (
     <ChartContainer>
@@ -150,7 +158,11 @@ const StatisticsChart = ({ stats }) => {
         <ChartSection>
           <StatsGrid>
             {stats.slice(0, 4).map(item => (
-              <StatCard key={item.status} status={item.status}>
+              <StatCard 
+                key={item.status} 
+                status={item.status} 
+                onClick={() => handleStatusCardClick(item.status)}
+              >
                 <StatValue>{item.count}</StatValue>
                 <StatLabel>{getStatusLabel(item.status)}</StatLabel>
               </StatCard>
@@ -159,7 +171,11 @@ const StatisticsChart = ({ stats }) => {
           
           <StatsGrid>
             {stats.slice(4).map(item => (
-              <StatCard key={item.status} status={item.status}>
+              <StatCard 
+                key={item.status} 
+                status={item.status} 
+                onClick={() => handleStatusCardClick(item.status)}
+              >
                 <StatValue>{item.count}</StatValue>
                 <StatLabel>{getStatusLabel(item.status)}</StatLabel>
               </StatCard>
@@ -173,7 +189,11 @@ const StatisticsChart = ({ stats }) => {
               const percentage = (item.count / totalUnits) * 100;
               
               return (
-                <BarGroup key={item.status}>
+                <BarGroup 
+                  key={item.status} 
+                  onClick={() => handleStatusCardClick(item.status)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <BarLabel>
                     <StatusName>{getStatusLabel(item.status)}</StatusName>
                     <StatusCount>{item.count}</StatusCount>

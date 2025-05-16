@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Provider } from 'react-redux';
@@ -9,6 +9,8 @@ import UnitDetailPage from './pages/UnitDetailPage';
 import StatisticsPage from './pages/StatisticsPage';
 import SearchBar from './components/SearchBar';
 import SearchResults from './components/SearchResults';
+import FloatingAddButton from './components/FloatingAddButton';
+import AddUnitModal from './components/AddUnitModal';
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -91,6 +93,34 @@ const SearchContainer = styled.div`
 
 const AppContent = () => {
   const location = useLocation();
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  
+  // Check if URL hash is #add-unit to show the modal
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#add-unit') {
+        setIsAddModalOpen(true);
+        // Clear hash after opening modal
+        setTimeout(() => {
+          window.history.pushState("", document.title, window.location.pathname + window.location.search);
+        }, 0);
+      }
+    };
+
+    // Check on mount and URL changes
+    handleHashChange();
+    
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [location]);
+  
+  const handleOpenAddModal = () => {
+    setIsAddModalOpen(true);
+  };
+  
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
   
   return (
     <AppContainer>
@@ -123,6 +153,12 @@ const AppContent = () => {
       <Footer>
         &copy; {new Date().getFullYear()} AD-tracker - Система відслідковування військових підрозділів
       </Footer>
+      
+      {/* Floating Add Button */}
+      <FloatingAddButton onClick={handleOpenAddModal} />
+      
+      {/* Global Add Unit Modal */}
+      <AddUnitModal isOpen={isAddModalOpen} onClose={handleCloseAddModal} />
     </AppContainer>
   );
 };

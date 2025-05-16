@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUnits, sortUnits, setFilter, clearFilters, removeUnit } from '../store/slices/unitSlice';
 import { addUnit } from '../store/slices/unitSlice';
@@ -344,16 +344,17 @@ const DashboardPage = () => {
     displayCount
   } = useSelector(state => state.units);
   
-  const [showAddModal, setShowAddModal] = useState(false);
+  // Removed local add modal state to use global one
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [unitToDelete, setUnitToDelete] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  const location = useLocation();
   const [filters, setFilters] = useState({
     name_of_unit: '',
     brigade_or_higher: '',
     mil_unit: '',
     email: '',
-    status: '',
+    status: location.state?.filterStatus || '',
     computer_name: '',
     date_from: '',
     date_to: ''
@@ -370,6 +371,20 @@ const DashboardPage = () => {
     
     return () => clearInterval(intervalId);
   }, [dispatch]);
+  
+  // Apply the status filter from location state when component mounts
+  useEffect(() => {
+    if (location.state?.filterStatus) {
+      // Update the UI filter display
+      setFilters(prev => ({ ...prev, status: location.state.filterStatus }));
+      
+      // Apply the filter in Redux
+      dispatch(setFilter({ field: 'status', value: location.state.filterStatus }));
+      
+      // Clear the location state to prevent reapplying filter on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, dispatch]);
   
   const handleSort = (field) => {
     dispatch(sortUnits(field));
@@ -400,14 +415,7 @@ const DashboardPage = () => {
     setLastUpdated(new Date());
   };
   
-  const handleAddUnit = async (unitData) => {
-    try {
-      dispatch(addUnit(unitData));
-      setShowAddModal(false);
-    } catch (err) {
-      console.error('Error creating unit:', err);
-    }
-  };
+  // Removed handleAddUnit as it's now handled by the global modal
   
   const handleDeleteClick = (unit) => {
     setUnitToDelete(unit);
@@ -436,7 +444,7 @@ const DashboardPage = () => {
             Оновити дані
           </RefreshButton>
         </div>
-        <AddButton onClick={() => setShowAddModal(true)}>
+        <AddButton onClick={() => window.location.href = "#add-unit"}>
           Додати підрозділ
         </AddButton>
       </Header>
@@ -619,23 +627,7 @@ const DashboardPage = () => {
         </div>
       )}
       
-      {/* Add Unit Modal */}
-      {showAddModal && (
-        <Modal>
-          <ModalContent>
-            <ModalHeader>
-              <ModalTitle>Додати новий підрозділ</ModalTitle>
-              <CloseButton onClick={() => setShowAddModal(false)}>×</CloseButton>
-            </ModalHeader>
-            <ModalBody>
-              <UnitForm 
-                onSubmit={handleAddUnit}
-                onCancel={() => setShowAddModal(false)}
-              />
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      )}
+      {/* Add Unit Modal removed - now using global modal */}
       
       {/* Delete Confirmation Modal */}
       {showDeleteModal && unitToDelete && (
