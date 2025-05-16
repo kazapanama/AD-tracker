@@ -127,7 +127,8 @@ const SearchResults = () => {
                 {unit.name_of_unit || unit.mil_unit}
               </ResultTitle>
               <ResultComputer>
-                {unit.computer_name ? `ПК: ${unit.computer_name}` : 'ПК: не вказано'}
+                {unit.brigade_or_higher ? `Бригада: ${unit.brigade_or_higher}` : ''}
+                {unit.computer_name ? `${unit.brigade_or_higher ? ' | ' : ''}ПК: ${unit.computer_name}` : unit.brigade_or_higher ? '' : 'ПК: не вказано'}
               </ResultComputer>
             </ResultItem>
           ))}
