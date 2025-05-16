@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { store } from './store';
+import { clearFilters } from './store/slices/unitSlice';
 import HomePage from './pages/HomePage';
 import DashboardPage from './pages/DashboardPage';
 import UnitDetailPage from './pages/UnitDetailPage';
@@ -93,7 +94,21 @@ const SearchContainer = styled.div`
 
 const AppContent = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  
+  // Function to clear filters when navigating to dashboard from header
+  const clearFiltersOnNavigation = (path) => {
+    // Clear filters in Redux
+    dispatch(clearFilters());
+    
+    // Navigate programmatically instead of relying on the Link component
+    navigate(path);
+    
+    // Prevent default navigation
+    return false;
+  };
   
   // Check if URL hash is #add-unit to show the modal
   useEffect(() => {
@@ -135,7 +150,7 @@ const AppContent = () => {
               <SearchResults />
             </SearchContainer>
             <StyledLink to="/">Головна</StyledLink>
-            <StyledLink to="/dashboard">Панель керування</StyledLink>
+            <StyledLink to="#" onClick={(e) => { e.preventDefault(); clearFiltersOnNavigation('/dashboard'); }}>Панель керування</StyledLink>
             <StyledLink to="/statistics">Статистика</StyledLink>
           </NavLinks>
         </Nav>
