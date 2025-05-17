@@ -3,10 +3,26 @@ import { searchUnits } from '../../utils/api';
 
 export const performSearch = createAsyncThunk(
   'search/performSearch',
-  async (query, { rejectWithValue }) => {
+  async (query, { rejectWithValue, getState }) => {
     try {
-      const response = await searchUnits(query);
-      return response;
+      // Get units from the Redux store instead of fetching from API
+      const state = getState();
+      const allUnits = state.units.items;
+      
+      // Filter units based on the query, performing a case-insensitive search
+      const searchTerm = query.toLowerCase();
+      const results = allUnits.filter(unit =>
+        unit.name_of_unit?.toLowerCase().includes(searchTerm) ||
+        unit.brigade_or_higher?.toLowerCase().includes(searchTerm) ||
+        unit.mil_unit?.toLowerCase().includes(searchTerm) ||
+        unit.description?.toLowerCase().includes(searchTerm) ||
+        unit.email?.toLowerCase().includes(searchTerm) ||
+        unit.computer_name?.toLowerCase().includes(searchTerm) ||
+        unit.ip_address?.toLowerCase().includes(searchTerm) ||
+        unit.status?.toLowerCase().includes(searchTerm)
+      );
+      
+      return results;
     } catch (error) {
       return rejectWithValue(error.message);
     }
